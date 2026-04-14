@@ -4,7 +4,7 @@ out
 *.log
 #.env*.local
 
-vendor/
+#vendor/
 #forms/smtp-config.php
 
 # Uploaded project images (keep folder via .gitkeep)
