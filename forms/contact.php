@@ -1,41 +1,77 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+/**
+ * Contact form → Gmail SMTP (PHPMailer).
+ * 1) composer install (project root)
+ * 2) Copy smtp-config.example.php to smtp-config.php and set credentials
+ */
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+declare(strict_types=1);
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+header('X-Robots-Tag: noindex');
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    echo 'Method not allowed';
+    exit;
+}
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+$configFile = __DIR__ . '/smtp-config.php';
+if (!is_readable($configFile)) {
+    echo 'Mail is not configured. Copy forms/smtp-config.example.php to forms/smtp-config.php and run composer install.';
+    exit;
+}
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+/** @var array{host:string,username:string,password:string,port:int,encryption:string,to_email:string} $config */
+$config = require $configFile;
 
-  echo $contact->send();
-?>
+$autoload = __DIR__ . '/../vendor/autoload.php';
+if (!is_readable($autoload)) {
+    echo 'Run composer install in the project root to install PHPMailer.';
+    exit;
+}
+
+require_once $autoload;
+
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use PHPMailer\PHPMailer\PHPMailer;
+
+$name = trim((string) ($_POST['name'] ?? ''));
+$email = trim((string) ($_POST['email'] ?? ''));
+$subject = trim((string) ($_POST['subject'] ?? ''));
+$message = trim((string) ($_POST['message'] ?? ''));
+
+if ($name === '' || $email === '' || $subject === '' || $message === '') {
+    echo 'Please fill in all fields.';
+    exit;
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo 'Please enter a valid email address.';
+    exit;
+}
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->CharSet = 'UTF-8';
+    $mail->isSMTP();
+    $mail->Host = $config['host'];
+    $mail->SMTPAuth = true;
+    $mail->Username = $config['username'];
+    $mail->Password = str_replace(' ', '', (string) $config['password']);
+    $enc = strtolower((string) ($config['encryption'] ?? 'ssl'));
+    $mail->SMTPSecure = $enc === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = (int) $config['port'];
+
+    $mail->setFrom($config['username'], 'Portfolio contact');
+    $mail->addAddress($config['to_email']);
+    $mail->addReplyTo($email, $name);
+    $mail->Subject = '[Portfolio] ' . $subject;
+    $mail->Body = "From: {$name} <{$email}>\n\n{$message}";
+    $mail->isHTML(false);
+
+    $mail->send();
+    echo 'OK';
+} catch (PHPMailerException) {
+    echo 'Could not send message. Please try again later.';
+}

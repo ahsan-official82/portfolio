@@ -1,0 +1,10 @@
+{
+  "name": "portfolio/contact-mail",
+  "description": "PHPMailer for static/MAMP contact.php",
+  "require": {
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}
