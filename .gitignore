@@ -5,8 +5,8 @@ out
 #.env*.local
 
 vendor/
-forms/smtp-config.php
+#forms/smtp-config.php
 
 # Uploaded project images (keep folder via .gitkeep)
-public/uploads/projects/*
-!public/uploads/projects/.gitkeep
+#public/uploads/projects/*
+#!public/uploads/projects/.gitkeep
