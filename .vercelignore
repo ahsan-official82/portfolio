@@ -1,0 +1,5 @@
+# PHP / Composer / MAMP contact form — not used on Vercel.
+vendor
+composer.json
+composer.lock
+forms
