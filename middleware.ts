@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { verifyAdminCookie } from "@/lib/admin-auth";
+import { verifyAdminCookie } from "./lib/admin-auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

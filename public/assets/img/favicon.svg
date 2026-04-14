@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Portfolio">
+  <rect width="32" height="32" rx="7" fill="#040b14"/>
+  <!-- Magnifying glass (portfolio / discovery) -->
+  <circle cx="13.5" cy="13.5" r="6" fill="none" stroke="#149ddd" stroke-width="2.25" stroke-linecap="round"/>
+  <path d="M18.2 18.2 25.2 25.2" stroke="#149ddd" stroke-width="2.75" stroke-linecap="round"/>
+</svg>

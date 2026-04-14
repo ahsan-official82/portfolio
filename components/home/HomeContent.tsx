@@ -1,6 +1,11 @@
 import Link from "next/link";
-import type { Project } from "@/lib/projects";
-import { cardImageSrc, detailPath, galleryForProject, normalizeProjectFilters } from "@/lib/projects";
+import {
+  cardImageSrc,
+  detailPath,
+  galleryForProject,
+  normalizeProjectFilters,
+  type Project,
+} from "@/lib/project-model";
 
 const SKILLS_TAGS = [
   "HTML",

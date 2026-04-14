@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ProjectForm } from "@/components/admin/ProjectForm";
-import { findProjectBySlug, getProjects } from "@/lib/projects";
+import { getProjects } from "@/lib/projects";
+import { findProjectBySlug } from "@/lib/project-model";
 
 export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: rawId } = await params;

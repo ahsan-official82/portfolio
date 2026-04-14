@@ -5,7 +5,8 @@ import { PortfolioDetailsSwiper } from "@/components/portfolio/PortfolioDetailsS
 import { ScrollExtras } from "@/components/ScrollExtras";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { findProjectBySlug, getProjects, normalizeImages, normalizeProjectSkills } from "@/lib/projects";
+import { getProjects } from "@/lib/projects";
+import { findProjectBySlug, normalizeImages, normalizeProjectSkills } from "@/lib/project-model";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
