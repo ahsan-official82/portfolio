@@ -1,5 +1,6 @@
 # PHP / Composer / MAMP contact form — not used on Vercel.
-vendor
+# Use leading slash so only the repo-root Composer folder is ignored, NOT public/assets/vendor/
+/vendor
 composer.json
 composer.lock
-forms
+/forms
